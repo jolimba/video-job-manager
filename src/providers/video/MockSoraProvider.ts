@@ -1,6 +1,7 @@
 import { VideoProvider } from "./VideoProvider";
 import { VideoJobResult } from "../../@types/VideoJobResult"
 import { seedJobs } from "../../utils/mocks/JobMock";
+import { redis } from "../../infra/redis/RedisClient";
 
 const jobList = seedJobs(100);
 const jobs = new Map<string, VideoJobResult>();
@@ -14,15 +15,21 @@ export class MockSoraProvider implements VideoProvider {
         };
         jobs.set(id, job)
         this.simulateProcessing(job);
+        await redis.set(
+            `job:${id}`,
+            JSON.stringify(job)
+        );
+        console.log("Saved in Redis:", `job:${id}`);
         return job;
     }
 
     async getJob(id: string): Promise<VideoJobResult> {
-        const job = jobList.get(id)
-        if(!job) {
-            throw new Error("Job not found.");
+        const data = await redis.get(`job:${id}`);
+        console.log("Fetched from Redis:", data);
+        if (!data) {
+            throw new Error("Job not found");
         }
-        return job
+        return JSON.parse(data);
     }
 
     private simulateProcessing(job: VideoJobResult) {

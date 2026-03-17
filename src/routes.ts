@@ -10,7 +10,7 @@ routes.post('/jobs', (req: Request, res: Response) => {
   if (!prompt) {
     return res.status(400).json({ error: 'Please, provide a prompt' });
   }
-  jobController.create(req, res)
+  return jobController.create(req, res)
 });
 
 routes.get('/jobs/:id', (req: Request<{ id: string }>, res: Response) => jobController.list(req, res));

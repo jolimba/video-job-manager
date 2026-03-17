@@ -6,6 +6,7 @@ const service = new VideoService();
 export class JobController {
     async list(req: Request<{ id: string }>, res: Response) {
         const id = req.params.id
+        console.log(id)
         const job = await service.list(id);
         return res.json({job})
     }
