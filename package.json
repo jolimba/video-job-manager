@@ -1,4 +1,8 @@
 {
+  "name": "ai-video-job-manager",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "license": "MIT",
   "dependencies": {
     "bullmq": "^5.71.0",
     "cors": "^2.8.6",
@@ -9,15 +13,25 @@
     "ioredis": "^5.10.0",
     "pg": "^8.20.0",
     "pino": "^10.3.1",
+    "redis": "^5.11.0",
+    "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.28"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.5.0",
+    "@types/pg": "^8.11.10",
     "jest": "^30.3.0",
     "ts-jest": "^29.4.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "typeorm": "typeorm-ts-node-commonjs"
   }
 }
