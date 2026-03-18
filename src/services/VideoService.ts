@@ -10,4 +10,13 @@ export class VideoService {
     async list(id: string) {
         return provider.getJob(id);
     }
+
+    async listAll() {
+        return provider.getAllJobs();
+    }
+
+    async changeStatus(id: string, status: string) {
+        console.log(status)
+        return provider.changeStatus(id, status);
+    }
 }

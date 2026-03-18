@@ -1,4 +1,5 @@
 import { VideoJobResult } from "../../@types/VideoJobResult";
+import { redis } from "../../infra/redis/RedisClient";
 
 const statuses = ["queued", "processing", "completed", "failed"] as const;
 
@@ -19,18 +20,21 @@ function randomPrompt() {
     return prompts[Math.floor(Math.random() * prompts.length)]
 }
 
-export function seedJobs(count: number): Map<string, VideoJobResult> {
-    for(let i = 0; i < count; i++) {
+export async function seedJobs(count: number): Promise<void> {
+    for (let i = 0; i < count; i++) {
         const id = crypto.randomUUID();
         const status = randomStatus();
         const job = {
             id,
             status,
             prompt: randomPrompt(),
-            videoUrl: status == "completed" ? `https://cdn.fake.video/${id}.mp4` : "undefined",
-            createAt: new Date(Date.now() - Math.random() * 100000)
-        }
-        jobs.set(id, job);
+            videoUrl: status === "completed"
+                ? `https://cdn.fake.video/${id}.mp4`
+                : undefined,
+            createdAt: new Date(Date.now() - Math.random() * 100000)
+        };
+
+        await redis.set(`job:${id}`, JSON.stringify(job));
+        await redis.sAdd("jobs", id);
     }
-    return jobs
 }

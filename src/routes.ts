@@ -15,4 +15,15 @@ routes.post('/jobs', (req: Request, res: Response) => {
 
 routes.get('/jobs/:id', (req: Request<{ id: string }>, res: Response) => jobController.list(req, res));
 
+routes.get('/jobs/all', (req: Request, res: Response) => jobController.listAll(req, res));
+
+routes.post('/jobs/job_update', (req: Request, res: Response) => {
+  const { id, status } = req.body;
+  if (!id) {
+    return res.status(400).json({ error: 'Please, provide a prompt' });
+  }
+  console.log(id, status)
+  return jobController.changeStatus(req, res);
+});
+
 export { routes };
